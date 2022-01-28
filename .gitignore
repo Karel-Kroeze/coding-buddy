@@ -1,0 +1,9 @@
+node_modules
+.parcel-cache
+.vscode
+
+data
+dist
+uploads/*
+
+*.env

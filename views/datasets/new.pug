@@ -1,0 +1,109 @@
+extends ../layout
+
+block title 
+    | Coding Buddy :: Create new DataSet
+
+block content
+    script(src="//cdn.jsdelivr.net/npm/jquery@1/dist/jquery.min.js")
+    script(src="//cdn.jsdelivr.net/npm/selectize@0.12.6/dist/js/standalone/selectize.min.js")
+    script(src="/assets/js/dataset-form.js")
+    link(rel="stylesheet" href="//cdn.jsdelivr.net/npm/selectize@0.12.6/dist/css/selectize.min.css")
+    link(rel="stylesheet" href="/assets/style/selectize.css")
+
+    form(method='post', action='/datasets', enctype='multipart/form-data')
+        .field
+            label.label Name
+            .control
+                input.input(name='name', type='text', placeholder='DataSet name')
+        
+        .field
+            label.label Description
+            .control
+                textarea.textarea(name='desc', type='text', placeholder='DataSet description')
+
+        .field
+            label.label Artifacts
+            .control
+                .file.has-name
+                    label.file-label
+                        input#artifacts.file-input(type="file", name="artifacts", accept="application/json,.json")
+                        span.file-cta
+                            span.file-icon
+                                i.iconify(data-icon='mdi-upload')
+                            span.file-label Choose a file
+                        span.file-name ...
+            p.help Upload a 
+                code .json
+                | file, containing an array of artifacts.
+
+        .field
+            label.label Type
+            .control
+                .select
+                    select#type(name='type')
+                        option(value="text") Text
+                        option(value="conceptmap") Concept Map
+                        option(value="feedback") Feedback
+                        option(value="proposition") Proposition
+                        option(value="observations") Observations
+
+        .field#template
+            label.label Template
+            .control
+                textarea.textarea(name='template', type='text')= dataset.template
+
+        .field
+            label.label Criteria
+            .control
+                if criteria.length
+                    select#criteria(name='criteria', multiple)
+                        each criterium in criteria
+                            option(value=criterium.id)= criterium.label
+                    script.
+                        $(function() {
+                            $('#criteria').selectize();
+                        });
+                        
+                else
+                    .info No criteria        
+            .control            
+                .buttons
+                    a.button.is-link(href="/criteria", target="_blank") Manage criteria
+                    a.button.is-link(href="/criteria/new", target="_blank") Create new criterium
+        
+        if (persons)
+            label.label Permissions
+            table.table
+                thead
+                    th Person
+                    th(title='hidden')
+                        i.iconify(data-icon='icomoon-free:eye-blocked', data-height='1.5em')
+                    th(title='coder')
+                        i.iconify(data-icon='ic:baseline-playlist-add-check', data-height='1.5em')
+                    th(title='editor')
+                        i.iconify(data-icon='ic:baseline-edit', data-height='1.5em')
+                    th(title='admin')
+                        i.iconify(data-icon='fa:cog', data-height='1.5em')
+                each person in persons
+                    - var admin = person.admin || user.id == person.id;
+                    tr
+                        td= person.name
+                            .has-text-size-small= person.email
+                        td
+                            input.is-checkradio(type="radio", id=`none.${person.id}` name=`permissions[${person.id}]` value='none' checked=!admin)
+                            label.is-marginless.is-block(for=`none.${person.id}`)
+                        td
+                            input.is-checkradio(type="radio", id=`view.${person.id}` name=`permissions[${person.id}]` value='view')
+                            label.is-marginless.is-block(for=`view.${person.id}`)
+                        td
+                            input.is-checkradio(type="radio", id=`edit.${person.id}` name=`permissions[${person.id}]` value='edit')
+                            label.is-marginless.is-block(for=`edit.${person.id}`)
+                        td
+                            input.is-checkradio.is-danger(type="radio", id=`admin.${person.id}` name=`permissions[${person.id}]` value='admin' checked=admin disabled=admin)
+                            label.is-marginless.is-block(for=`admin.${person.id}`)
+
+        .field
+            .control
+                input.button.is-large.is-primary(value="Create DataSet!", type="submit")
+
+        

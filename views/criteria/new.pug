@@ -1,0 +1,75 @@
+extends ../layout.pug
+
+block content
+    script(src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js")
+    link(href="//cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote-lite.css" rel="stylesheet")
+    script(src="//cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote-lite.js")
+
+    script(src="/assets/js/createCriterium.js")
+    script(src="/assets/js/categorical.js")
+    script(src="/assets/js/quill.js")
+    link(href="/assets/style/textarea.css" rel="stylesheet")
+
+    form(action=baseUrl, method="post")
+        .field
+            label.label Name
+            .control
+                input.input(name='name', type='text', placeholder='Name')
+        
+        .field
+            label.label Label
+            .control
+                input.input(name='label', type='text', placeholder='Label')
+        
+        .field
+            label.label Description
+            .control
+                textarea.textarea.editor(name='desc', placeholder='Description', id="main-description")
+        
+        //- todo: this needs to be dynamic
+        .field
+            label.label Type
+            .control
+                .select
+                    select#type(name='type')
+                        option(value="number") Numeric
+                        option(value="enum") Categorical
+                        option(value="boolean") Boolean
+                        option(value="open") Open
+        
+        .conditional.if-number.field
+            label.label Range
+            .columns
+                .column
+                    .field.has-addons
+                        .control
+                            a.button.is-static From
+                        .control.is-expanded
+                            input.input(name='min', type='number', placeholder='0')
+                .column
+                    .field.has-addons
+                        .control
+                            a.button.is-static To
+                        .control.is-expanded
+                            input.input(name='max', type='number', placeholder='10')
+        .conditional.if-enum.field.categorical
+            label.label Options
+            .options.margin-bottom-1
+                .option.template.hidden
+                    .field.has-addons
+                        .control.is-expanded
+                            input.input(name='options[0][label]', type='text', placeholder='Option')
+                        .control
+                            a.button.remove-option.is-danger.is-outlined
+                                i.icon.iconify(data-icon="ic:baseline-delete")
+                    .field
+                        .control
+                            textarea.textarea(name='options[0][desc]', type='text', placeholder='Description') 
+            a.add-option.button.is-link
+                i.icon.iconify(data-icon="ic:baseline-add")
+                span Add option
+        
+        .field
+            .control
+                input.button.is-large.has-text-weight-bold.is-primary(type='submit', value='Create Criterium!')
+        

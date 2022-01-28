@@ -1,0 +1,33 @@
+extends ../layout
+
+block title 
+    | Coding Buddy :: Criteria
+
+block content
+    table.table
+        if criteria.length
+            thead
+                tr
+                    th Name
+                    th Label
+                    th Description
+                    th 
+            each criterium in criteria
+                tr
+                    th
+                        a(href=`${baseUrl}/${criterium.id}`)= criterium.name
+                    td= criterium.label
+                    td !{criterium.desc}
+                    td
+                        .buttons.no-wrap
+                            a.button.is-small(href=`${baseUrl}/${criterium.id}`)
+                                i.icon.iconify(data-icon='ic:baseline-search')
+                            if(user.admin || criterium.owner == user.id)
+                                a.button.is-small(href=`${baseUrl}/${criterium.id}/edit`)
+                                    i.icon.iconify(data-icon='ic:baseline-edit')
+                            if(user.admin || criterium.owner == user.id)
+                                a.button.is-small.is-danger.is-outlined(href=`${baseUrl}/${criterium.id}?_method=DELETE`)
+                                    i.icon.iconify(data-icon='ic:baseline-delete')
+        else
+            .info No Criteria
+    a.button.is-large.is-primary(href=`${baseUrl}/new`) Create new Criterium

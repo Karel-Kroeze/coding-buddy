@@ -1,0 +1,12 @@
+$fade-out: 1s; 
+
+.flash-message {
+    margin: 1em 0;
+    padding: .5em;
+    
+    &.fade {
+        visibility: hidden;
+        opacity: 0;
+        transition: visibility 0s $fade-out, opacity $fade-out ease-in;
+    }         
+}

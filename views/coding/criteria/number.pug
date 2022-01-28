@@ -1,0 +1,5 @@
+.field
+    label.label= criterium.name
+    .control
+        input.input(name=criterium.label type="number" min=criterium.min max=criterium.max required)
+    .help !{criterium.desc}

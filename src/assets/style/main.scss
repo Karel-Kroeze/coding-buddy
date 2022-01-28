@@ -1,0 +1,66 @@
+@charset "utf-8";
+@import "../../../node_modules/bulma/bulma.sass";
+@import "../../../node_modules/bulma-checkradio/dist/css/bulma-checkradio.sass";
+@import "../../../node_modules/bulma-switch/dist/css/bulma-switch.sass";
+
+$grey: #fafafa;
+$dark-grey: #666;
+
+.info {
+    display: inline-block;
+    background: $grey;
+    color: $dark-grey;
+    border-radius: 3px;
+    font-style: italic;
+    padding:  calc(0.375em - 1px) .75rem;
+    margin-bottom: .75rem;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.margin-bottom-1 {
+    margin-bottom: .75rem;
+}
+
+.no-wrap {
+    flex-wrap: nowrap;
+}
+
+.control {
+    a.button:not(:last-child) {
+        margin: 0 8 8 0;
+    }
+}
+
+.is-boolean[type="checkbox"]:checked + label:after {
+    content: "\2713";
+    top: 0.3rem !important;
+    border: 0 !important;
+    color: #fff;
+    position: absolute;
+    transform: none;
+}
+
+.is-boolean[type="checkbox"].is-danger:checked + label:after {
+    content: "\2717";
+}
+
+#artifact {
+    width: 100%;
+    height: calc(100vh - 350px);
+}
+
+.option { 
+    padding: .5rem;
+}
+
+.option:nth-child(even) {
+    background: rgb( 250, 250, 250 )
+}
+
+#criteria {
+    overflow-y: auto;
+    max-height: calc( 100vh - 300px);
+}

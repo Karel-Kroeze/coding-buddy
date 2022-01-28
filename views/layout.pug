@@ -1,0 +1,23 @@
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        meta(http-equiv="X-UA-Compatible", content="ie=edge")
+        link(rel="stylesheet", href="/assets/style/main.css")
+        script(src="https://code.iconify.design/1/1.0.0/iconify.min.js")
+        title
+            block title
+                | Coding Buddy
+    body
+        include header.pug
+        .container
+            if (messages)
+                each message in messages
+                    div(class=`notification flash-message is-${message.type}`)
+                        button.delete
+                        p= message.message
+                script(src="/assets/js/messages.js")
+                link(rel="stylesheet", href="/assets/style/messages.css")
+            .section.content
+                block content
+        include footer.pug

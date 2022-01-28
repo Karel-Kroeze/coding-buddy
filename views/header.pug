@@ -1,0 +1,29 @@
+.navbar.has-background-light
+    .container
+        .navbar-brand 
+            .navbar-item.has-background-white
+                img(src="/assets/img/olly.svg")
+                h2 Coding Buddy
+            .navbar-burger
+                span
+                span
+                span
+        .navbar-menu
+            if( user )  
+                .navbar-start
+                    a.navbar-item.is-tab(href='/datasets' class=path == "datasets" ? "is-active" : "") DataSets
+                    a.navbar-item.is-tab(href='/criteria' class=path == "criteria" ? "is-active" : "") Criteria
+                    a.navbar-item.is-tab(href='/persons' class=path == "persons" ? "is-active" : "") Users
+                    a.navbar-item.is-tab(href='/coding' class=path == "coding" ? "is-active" : "") Coding
+                    //- .navbar-item= path
+                .navbar-end
+                    .navbar-item
+                        span= user.name
+                    .navbar-item
+                        a.button.is-danger(href='/logout') Log out
+            else
+                .navbar-end
+                    .navbar-item
+                        a.button(href='/login') Log in
+
+script(src="/assets/js/navbar.js")

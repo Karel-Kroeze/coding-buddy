@@ -1,0 +1,5 @@
+FROM node:lts
+EXPOSE 3000
+RUN npm install -g nodemon
+CMD [ "nodemon", "--legacy-watch", "--watch", "app/dist", "--delay", "1", "app/dist/server.js" ]
+

@@ -1,0 +1,33 @@
+version: "2"
+
+volumes:
+  db:
+
+networks:
+  personal:
+    # driver: bridge
+    external:
+      name: srv_personal
+
+services:
+  mongo: 
+    image: mongo
+    volumes: 
+      - db:/data/db
+    networks:
+      - personal
+  
+  app:
+    build: .
+    links: 
+      - mongo
+    ports: 
+      - 3000:3000
+    env_file: local.env 
+    networks:
+      - personal
+    environment:
+      - LETSENCRYPT_HOST=coding.karel-kroeze.nl
+      - LETSENCRYPT_EMAIL=karel.kroeze@gmail.com
+      - VIRTUAL_HOST=coding.karel-kroeze.nl
+      - VIRTUAL_PORT=3000

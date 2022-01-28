@@ -1,0 +1,49 @@
+extends ../layout
+
+block title 
+    | Coding Buddy :: Add person
+    
+block content
+    form(method='post', action='/persons')
+        .field
+            label.label Name
+            .control
+                input.input(name='name', type='text', placeholder='Name')
+
+        .field
+            label.label E-mail
+            .control
+                input.input(name='email', type='email', placeholder='test@example.com')
+        
+        if (datasets)
+            label.label Dataset permissions
+            table.table
+                thead
+                    th DataSet
+                    th(title='hidden')
+                        i.iconify(data-icon='icomoon-free:eye-blocked', data-height='1.5em')
+                    th(title='coder')
+                        i.iconify(data-icon='ic:baseline-playlist-add-check', data-height='1.5em')
+                    th(title='editor')
+                        i.iconify(data-icon='ic:baseline-edit', data-height='1.5em')
+                    th(title='admin')
+                        i.iconify(data-icon='fa:cog', data-height='1.5em')
+                each dataset in datasets
+                    tr
+                        td= dataset.name
+                        td
+                            input.is-checkradio(type="radio", id=`none.${dataset.id}` name=`datasets[${dataset.id}]` value='none' checked)
+                            label.is-marginless.is-block(for=`none.${dataset.id}`)
+                        td
+                            input.is-checkradio(type="radio", id=`view.${dataset.id}` name=`datasets[${dataset.id}]` value='view')
+                            label.is-marginless.is-block(for=`view.${dataset.id}`)
+                        td
+                            input.is-checkradio(type="radio", id=`edit.${dataset.id}` name=`datasets[${dataset.id}]` value='edit')
+                            label.is-marginless.is-block(for=`edit.${dataset.id}`)
+                        td
+                            input.is-checkradio.is-danger(type="radio", id=`admin.${dataset.id}` name=`datasets[${dataset.id}]` value='admin')
+                            label.is-marginless.is-block(for=`admin.${dataset.id}`)
+
+        .field
+            .control
+                input.button.is-primary(type='submit', value='Add person')

@@ -1,0 +1,20 @@
+version: "3"
+
+services:
+    mongo:
+        image: mongo
+        volumes:
+            - ./data/db:/data/db
+
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile.local
+        links:
+            - mongo
+        ports:
+            - 3000:3000
+        volumes:
+            - ./dist:/app/dist
+            - ./node_modules:/app/node_modules
+        env_file: local.env

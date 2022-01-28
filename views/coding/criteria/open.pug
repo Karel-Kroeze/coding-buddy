@@ -1,0 +1,20 @@
+.field
+    label.label= criterium.name
+    .control
+        select(name=`${criterium.label}`, multiple, id=`${criterium.label}`)
+            each option in criterium.options
+                option(value=option.label)= option.label
+        script.
+            $(function() {
+                $('##{criterium.label}').selectize({
+                    persist: false,
+                    create: function(input) {
+                        return {
+                            value: input,
+                            text: input
+                        }
+                    }
+                });
+            });
+            
+    .help !{criterium.desc}

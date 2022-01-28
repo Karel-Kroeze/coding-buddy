@@ -1,0 +1,17 @@
+extends ../layout
+
+block title 
+    | Coding Buddy :: #{person.name}
+    
+block content
+    h1= person.name
+    //- todo: coding done.
+
+    .buttons   
+        if (user.admin || user.id == person.id)
+            a.button(href=`${baseUrl}/${person.id}/edit`) 
+                i.icon.iconify(data-icon='ic:baseline-edit')
+        if (user.admin && user.id != person.id)
+            a.button.is-danger.is-outlined(href=`${baseUrl}/${person.id}?_method=DELETE`)
+                i.icon.iconify(data-icon='ic:baseline-delete')
+    

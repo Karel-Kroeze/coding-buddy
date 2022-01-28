@@ -1,0 +1,52 @@
+extends ../layout.pug
+
+block title
+    | Coding :: #{dataset.name}
+
+block content  
+    script let artifact = !{JSON.stringify(artifact, null, 4)};
+        | console.log( artifact );
+    if dataset.type == "Text"
+        script let template = !{JSON.stringify(dataset.template, null, 4)};
+            | console.log( template );
+    script(src='/assets/js/coding.js')
+    script(src=`/assets/js/renderers/${dataset.type}.js`)
+    .columns
+        .column.is-two-thirds.content
+            #artifact
+        .column.content.scrollbars#criteria
+            .field.is-pulled-right
+                button#help-toggle.button.is-small.is-light(type="checkbox", checked="checked", title="toggle criteria descriptions", data-toggled="true")
+                    i.icon.iconify(data-icon="mdi:arrow-collapse-vertical")
+            form(action=`${baseUrl}/dataset/${dataset.id}/${artifact.id}`, method="post")
+                - let booleanScriptIncluded = false;
+                - let openScriptsIncluded = false;
+                each criterium in dataset.criteria
+                    //- todo: figure out how to make this dynamic
+                    if criterium.type == "number"
+                        include ./criteria/number.pug
+                    if criterium.type == "enum"
+                        include ./criteria/enum.pug
+                    if criterium.type == "boolean"
+                        if !booleanScriptIncluded
+                            script(src=`/assets/js/boolean.js`)
+                            - booleanScriptIncluded = true;
+                        include ./criteria/boolean.pug
+                    if criterium.type == "open"
+                        if !openScriptsIncluded
+                            script(src="//cdn.jsdelivr.net/npm/jquery@1/dist/jquery.min.js")
+                            script(src="//cdn.jsdelivr.net/npm/selectize@0.12.6/dist/js/standalone/selectize.min.js")
+                            link(rel="stylesheet" href="//cdn.jsdelivr.net/npm/selectize@0.12.6/dist/css/selectize.min.css")
+                            link(href="/assets/style/selectize.css" rel="stylesheet")
+                            - openScriptsIncluded = true;
+                        include ./criteria/open.pug
+
+                .field
+                    .control
+                        - var progressString = `${progress.completed}/${progress.total} completed`
+                        progress.progress.is-info(max=progress.total, value=progress.completed, title=progressString)= progressString
+
+                .field
+                    .control
+                        input.button.is-success.is-large(type='submit', value='Next')
+                        button#mark-button.button.is-info.is-pulled-right(onclick=`mark( "${artifact.id}", event )`) Mark

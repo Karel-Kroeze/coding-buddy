@@ -1,0 +1,58 @@
+extends ../layout
+
+block title 
+    | Coding Buddy :: #{title}
+
+block content
+    table.table
+        if datasets.length
+            thead
+                tr
+                    th Name
+                    th Description
+                    th Type
+                    th Artifacts
+                    th Criteria
+                    th People
+                    th 
+            each dataset, index in datasets
+                tr
+                    th
+                        a(href=`${baseUrl}/${dataset.id}`)= dataset.name
+                    td= dataset.desc
+                    td= dataset.type
+                    td= dataset.artifacts.length
+                    td
+                        if (dataset.criteria)
+                            each criterium, index in dataset.criteria
+                                | #{criterium.label}
+                                if ( ( index + 1 ) < dataset.criteria.length )
+                                    |, 
+                    td
+                    td
+                        .columns
+                            .column
+                                .buttons.no-wrap.has-addons
+                                    if(dataset.role >= 2 && dataset.completed)
+                                        a.button.is-small(href=`${baseUrl}/${dataset.id}/download` title=`download ${dataset.name} codes`)
+                                            i.icon.iconify(data-icon='ic:baseline-cloud-download')
+                                    if(dataset.role >= 3)
+                                        if(dataset.coding)
+                                            a.button.is-small.is-danger.is-outlined(href=`${baseUrl}/${dataset.id}/stop` title=`stop coding ${dataset.name}`)
+                                                i.icon.iconify(data-icon='ic:baseline-stop')
+                                        else if(!dataset.completed)
+                                            a.button.is-small.is-success.is-outlined(href=`${baseUrl}/${dataset.id}/start` title=`start coding ${dataset.name}`)
+                                                i.icon.iconify(data-icon='ic:baseline-play-arrow')
+                            .column
+                                .buttons.no-wrap.has-addons
+                                    a.button.is-small(href=`${baseUrl}/${dataset.id}` title=`view ${dataset.name} details`)
+                                        i.icon.iconify(data-icon='ic:baseline-search')
+                                    if(dataset.role >= 2)
+                                        a.button.is-small(href=`${baseUrl}/${dataset.id}/edit` title=`edit ${dataset.name} details`)
+                                            i.icon.iconify(data-icon='ic:baseline-edit')
+                                    if(dataset.role >= 3)
+                                        a.button.is-small.is-danger.is-outlined(href=`${baseUrl}/${dataset.id}?_method=DELETE` title=`delete ${dataset.name}, and all associated data`)
+                                            i.icon.iconify(data-icon='ic:baseline-delete')
+        else
+            .info No DataSets    
+    a.button.is-large.has-text-weight-bold.is-primary(href='/datasets/new') Create new DataSet

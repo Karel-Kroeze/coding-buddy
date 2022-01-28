@@ -1,0 +1,8 @@
+.field
+    label.label= criterium.name
+    .help !{criterium.desc}
+    each option in criterium.options
+        .control
+            input.is-checkradio(type="radio", id=`${criterium.label}-${option.label}`, name=criterium.label, value=option.label, required)
+            label.is-marginless.is-block(for=`${criterium.label}-${option.label}`)= option.label
+                .help !{option.desc}

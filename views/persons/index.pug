@@ -1,0 +1,31 @@
+extends ../layout
+
+block title 
+    | Coding Buddy :: #{title}
+
+block content
+    if persons.length
+        table.table
+            thead
+                tr
+                    th Name
+                    th E-mail
+                    th 
+            each person in persons
+                tr
+                    th
+                        a(href=`${baseUrl}/${person.id}`)= person.name
+                    td= person.email
+                    td
+                        .buttons
+                            a.button.is-small(href=`${baseUrl}/${person.id}`)
+                                i.icon.iconify(data-icon='ic:baseline-search')
+                            if(user.admin || user.id == person.id)
+                                a.button.is-small(href=`${baseUrl}/${person.id}/edit`)
+                                    i.icon.iconify(data-icon='ic:baseline-edit')
+                            if(user.admin && user.id != person.id)
+                                a.button.is-small.is-danger.is-outlined(href=`${baseUrl}/${person.id}?_method=DELETE`)
+                                    i.icon.iconify(data-icon='ic:baseline-delete')
+    else
+        .info No Persons    
+    a.button.is-large.has-text-weight-bold.is-primary(href=`${baseUrl}/new`) Add person

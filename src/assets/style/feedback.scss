@@ -1,0 +1,49 @@
+
+  .hint-message {
+    padding: .6em;
+    text-align: center;
+    z-index: 1;
+    pointer-events: all;
+    
+    position: relative;
+    background:#EEE;
+    border-radius: .4em;
+  
+    :after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 25%;
+      width: 0;
+      height: 0;
+      border: 19px solid transparent;
+      border-top-color: #EEE;
+      border-bottom: 0;
+      border-right: 0;
+      margin-left: -10px;
+      margin-bottom: -19px;
+    }
+  }
+  
+  .overlay {
+    position: fixed;
+    pointer-events: none;
+    overflow: hidden;
+    width: 150px;
+  
+    transition: .5s ease;
+  
+    .hint-image {
+      max-height: 200px;
+      max-width: 150px;
+      z-index: -2;
+    }
+  
+    #hint-buttons {
+      margin-top: 5px;
+    }
+  }
+
+.selector > * {
+  margin: 5px;
+}

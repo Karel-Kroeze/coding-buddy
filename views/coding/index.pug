@@ -1,0 +1,26 @@
+extends ../layout
+
+block title 
+    | Coding :: available DataSets
+
+block content
+    if datasets.length
+        each dataset in datasets
+            .content
+                .card
+                    .card-content
+                        .columns
+                            .column
+                                .h4.title.is-4= dataset.name
+                                .tag= dataset.type
+                                p= dataset.desc
+                            if dataset.marks.length
+                                .column
+                                    a.button.is-pulled-right.is-info(href=`${baseUrl}/marks/dataset/${dataset.id}/${dataset.marks[0].id}`) View marks
+                            .column
+                                a.button.is-pulled-right.is-success.is-large(href=`${baseUrl}/dataset/${dataset.id}`) Start coding
+                        - var progressString = `${dataset.progress.completed}/${dataset.progress.total} completed`
+                        progress.progress.is-info(max=dataset.progress.total, value=dataset.progress.completed, title=progressString)= progressString
+
+    else 
+        .info No DataSets ready for coding.

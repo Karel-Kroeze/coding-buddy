@@ -1,0 +1,38 @@
+extends ../layout
+
+block title 
+    | Coding Buddy :: #{dataset.name}
+
+block content
+    h1= dataset.name
+    p.desc= dataset.desc
+    
+    h2 Coding
+    pre= JSON.stringify( dataset.progress, null, 4 )
+    if dataset.codes.length
+        a.button.is-info(href=`/coding/codes/dataset/${dataset.id}/${dataset.codes[0].id}`) View codes
+
+    if dataset.marks.length
+        a.button.is-info(href=`/coding/marks/dataset/${dataset.id}/${dataset.marks[0].id}`) View marks
+
+    if dataset.criteria.length
+        h2 Criteria
+        ul
+        each criterium in dataset.criteria
+            //- TODO: criterium overview, per criteria summary, etc.
+            li
+                a(href=`/criteria/${criterium.id}`)= criterium.label
+    else
+        .info No criteria
+
+    if (user.can("Edit", dataset))
+        .buttons   
+            a.button.is-outlined(href=`${baseUrl}/${dataset.id}/download`)
+                i.icon.iconify(data-icon='ic:baseline-cloud-download')
+            a.button(href=`${baseUrl}/${dataset.id}/edit`) 
+                i.icon.iconify(data-icon='ic:baseline-edit')
+            a.button(href=`${baseUrl}/${dataset.id}/copy`)
+                i.icon.iconify(data-icon='ic:baseline-file-copy')
+            if (user.can("Admin", dataset))
+                a.button.is-danger.is-outlined(href=`${baseUrl}/${dataset.id}?_method=DELETE`)
+                    i.icon.iconify(data-icon='ic:baseline-delete')

@@ -1,0 +1,17 @@
+extends layout.pug
+
+block content
+    form(action="/login", method="post")
+        .field
+            label.label Email
+            .control
+                input.input(name='email', type='email', placeholder='e-mail address')
+        
+        .field
+            label.label Password
+            .control
+                input.input(name='password', type='password')
+        
+        .field
+            .control
+                input.button.is-primary.is-large.has-text-weight-bold(name='login', type='submit', value="Log in")

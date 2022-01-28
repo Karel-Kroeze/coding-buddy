@@ -1,0 +1,26 @@
+extends ../layout.pug
+
+block title
+    | Coding :: #{dataset.name}
+
+block content  
+    script let artifact = !{JSON.stringify(artifact, null, 4)};
+        | 
+        | console.log( artifact );
+    script(src=`/assets/js/renderers/${dataset.type}.js`)
+    .columns
+        .column.is-two-thirds.content
+            #artifact
+        .column.content.scrollbars#criteria
+            if code
+                each criterium in code.criteria
+                    span.label= criterium.criterium.label
+                    p.answer= criterium.value
+
+            .field
+                .control
+                    a.button.is-danger(href=`${baseUrl}${path}${dataset.id}/${code.id}/delete`) Delete
+                    if previous
+                        a.button.is-primary(href=`${baseUrl}${path}${dataset.id}/${previous}`) Previous
+                    if next
+                        a.button.is-primary(href=`${baseUrl}${path}${dataset.id}/${next}`) Next
