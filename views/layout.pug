@@ -10,7 +10,7 @@ html(lang="en")
                 | Coding Buddy
     body
         include header.pug
-        .container
+        .container.content
             if (messages)
                 each message in messages
                     div(class=`notification flash-message is-${message.type}`)

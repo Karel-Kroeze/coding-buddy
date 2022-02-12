@@ -1,0 +1,30 @@
+
+services:
+  mongo: 
+    image: mongo:4
+    volumes: 
+      - db:/data/db
+    networks:
+      - proxy
+  
+  app:
+    build: .
+    links: 
+      - mongo
+    ports: 
+      - 3000:3000
+    env_file: production.env 
+    networks:
+      - proxy
+    environment:
+      - LETSENCRYPT_HOST=coding.home.karel-kroeze.nl
+      - LETSENCRYPT_EMAIL=karel.kroeze@gmail.com
+      - VIRTUAL_HOST=coding.home.karel-kroeze.nl
+
+volumes:
+  db:
+
+networks:
+  proxy:
+    name: proxy
+    external: true

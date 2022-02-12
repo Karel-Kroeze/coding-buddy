@@ -20,8 +20,7 @@ router.get("/", User.can("list datasets"), async (req, res) => {
     const docs = (await DataSet.find({})
         .populate("criteria")
         .exec()) as DataSetDocument[];
-    await Promise.all(docs.map((doc) => doc.getRole(user)));
-    let datasets = docs.filter((doc) => doc.role >= ERole.view);
+    let datasets = docs.filter(async (doc) => await user.role(doc) >= ERole.view);
     res.render("datasets/index", {
         title: "DataSets",
         datasets,
@@ -322,10 +321,7 @@ router.get("/:datasetId", User.can("view dataset"), async (req, res) => {
         let dataset = (await DataSet.findById(req.params.datasetId)
             .populate({
                 path: "criteria",
-                populate: {
-                    path: "criterium",
-                    model: "Criterium",
-                },
+
             })
             .exec()) as DataSetDocument;
         if (!dataset) throw "dataset not found";

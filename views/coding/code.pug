@@ -10,7 +10,7 @@ block content
         script let template = !{JSON.stringify(dataset.template, null, 4)};
             | console.log( template );
     script(src='/assets/js/coding.js')
-    script(src=`/assets/js/renderers/${dataset.type}.js`)
+    script(src=`/assets/js/renderers/${dataset.type.toLowerCase()}.js`)
     .columns
         .column.is-two-thirds.content
             #artifact

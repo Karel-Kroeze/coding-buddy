@@ -15,13 +15,13 @@ let router = CodingRouter;
 
 router.get("/", User.can("list datasets"), async (req, res) => {
     try {
-        let datasets = (await DataSet.find({})) as DataSetDocument[];
-        await Promise.all(datasets.map((ds) => ds.getRole(req.user!)));
+        const user = req.user!;
+        const datasets = (await DataSet.find({})) as DataSetDocument[];
         await Promise.all(datasets.map((ds) => ds.getProgress()));
         await Promise.all(datasets.map((ds) => ds.getMarks()));
         res.render("coding/index", {
             datasets: datasets.filter(
-                (ds) => ds.coding && ds.role >= ERole.view
+                async (ds) => ds.coding && await user.role(ds) >= ERole.view
             ),
             baseUrl: req.baseUrl,
         });

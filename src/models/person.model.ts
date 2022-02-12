@@ -30,7 +30,7 @@ export interface IPersonMethods {
     roleString(dataset: mongoose.Types.ObjectId | IDataSet): Promise<string>;
     createLoginToken(): void;
 }
-
+ 
 export interface IPersonModel extends Model<IPerson> {
     hash(password: string, salt: string): Promise<string>;
 }

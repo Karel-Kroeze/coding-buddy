@@ -1,7 +1,9 @@
-import mongoose from "mongoose";
+import mongoose, { MongooseOptions } from "mongoose";
 
 let connection_string = `mongodb://${process.env.DB_HOST}/${process.env.DB_NAME}`;
-let options = {};
+let options: MongooseOptions = {
+    // strictPopulate: false,
+};
 
 export async function connect() {
     let db = mongoose.connect(connection_string, options);

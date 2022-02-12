@@ -6,7 +6,7 @@ import { CriteriumDocument, ICriterium } from "./criterium.model";
 import { IMark, Mark } from "./mark.model";
 import { IPerson, PersonDocument } from "./person.model";
 import { ERole } from "./role.enum";
-import { Role } from "./role.model";
+import { IRole, Role } from "./role.model";
 
 const ObjectId = mongoose.Schema.Types.ObjectId;
 
@@ -20,7 +20,7 @@ export interface IDataSet {
     coding: boolean;
     completed: boolean;
     criteria: ICriterium[];
-    role: ERole;
+    roles: IRole[];
     progress: IProgress;
     marks: IMark[];
     codes: ICode[];
@@ -49,6 +49,7 @@ const DataSetSchema = new Schema<IDataSet, IDataSetMethods>({
     type: { type: String, required: true },
     template: { type: String, required: false },
     criteria: [{ type: ObjectId, ref: "Criterium" }],
+    roles: [{type: ObjectId, ref: "Role"}],
     coding: { type: Boolean, default: false },
     completed: { type: Boolean, default: false },
 });
@@ -57,13 +58,6 @@ export type DataSetDocument = HydratedDocument<IDataSet, IDataSetMethods>;
 
 // TODO: Find a better solution for sync accessors to async data?
 DataSetSchema.method({
-    getRole: async function (
-        this: DataSetDocument,
-        person: PersonDocument
-    ): Promise<ERole> {
-        (<any>this)._role = await person.role(this);
-        return (<any>this)._role;
-    },
     getProgress: async function (this: DataSetDocument): Promise<IProgress> {
         let progress = await Artifact.aggregate([
             { $match: { dataset: new ObjectId(this.id) } },
@@ -95,11 +89,6 @@ DataSetSchema.method({
     },
 });
 
-DataSetSchema.virtual("role").get(function (this: DataSetDocument): ERole {
-    if (typeof (<any>this)._role === "undefined")
-        throw "role not set. Make sure to call getRole before accessing role.";
-    return (<any>this)._role;
-});
 DataSetSchema.virtual("progress").get(function (
     this: DataSetDocument
 ): IProgress {

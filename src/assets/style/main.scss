@@ -1,7 +1,7 @@
 @charset "utf-8";
-@import "../../../node_modules/bulma/bulma.sass";
-@import "../../../node_modules/bulma-checkradio/dist/css/bulma-checkradio.sass";
-@import "../../../node_modules/bulma-switch/dist/css/bulma-switch.sass";
+@import "bulma/bulma";
+@import "bulma-checkradio/dist/css/bulma-checkradio";
+@import "bulma-switch/src/sass";
 
 $grey: #fafafa;
 $dark-grey: #666;
@@ -49,7 +49,6 @@ $dark-grey: #666;
 
 #artifact {
     width: 100%;
-    height: calc(100vh - 350px);
 }
 
 .option { 
@@ -63,4 +62,18 @@ $dark-grey: #666;
 #criteria {
     overflow-y: auto;
     max-height: calc( 100vh - 300px);
+}
+
+body {
+    display: flex;
+    flex-flow: column nowrap;
+    min-height: 100%;
+
+    .container.content {
+        flex: 1 0 auto;
+    }
+
+    .footer {
+        padding: 1em 2em 2em;
+    }
 }

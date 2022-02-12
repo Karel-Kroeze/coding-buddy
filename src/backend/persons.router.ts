@@ -82,7 +82,7 @@ router.get("/:personId/edit", User.can("edit person"), async (req, res) => {
     const user = req.user!;
     let roles, datasets;
     if (person && person !== req.user) {
-        datasets = await DataSet.find({ owner: user.id }).populate("roles");
+        datasets = await DataSet.find({ owner: user.id });
         roles = await Promise.all(
             datasets.map(async (ds) => {
                 return person!.roleString(ds);
