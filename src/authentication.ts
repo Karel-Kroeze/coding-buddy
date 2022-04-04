@@ -19,7 +19,7 @@ passport.use(
                     req.message("Incorrect username.");
                     return done(null, false);
                 }
-                if (!user.verifyPassword(password)) {
+                if (!(await user.verifyPassword(password))) {
                     req.message("Incorrect password.");
                     return done(null, false);
                 }

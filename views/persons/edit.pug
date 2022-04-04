@@ -18,7 +18,7 @@ block content
         .field
             label.label Admin
             .control
-                input.is-checkradio(type="checkbox" name="admin", disabled=!user.admin || user.id == person.id, checked=person.admin id="admin", value="true")
+                input.is-checkradio(type="checkbox" name="admin", disabled=!user.admin || user.id == person.id, checked=person.admin, id="admin", value="true")
                 label.is-marginless.is-block(for=`admin`)
 
         if (datasets)

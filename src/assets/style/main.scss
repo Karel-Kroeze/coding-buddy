@@ -1,5 +1,7 @@
 @charset "utf-8";
-@import "bulma/bulma";
+$border: red;
+@import "https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css";
+// @import "bulma/bulma";
 @import "bulma-checkradio/dist/css/bulma-checkradio";
 @import "bulma-switch/src/sass";
 
@@ -12,8 +14,8 @@ $dark-grey: #666;
     color: $dark-grey;
     border-radius: 3px;
     font-style: italic;
-    padding:  calc(0.375em - 1px) .75rem;
-    margin-bottom: .75rem;
+    padding: calc(0.375em - 1px) 0.75rem;
+    margin-bottom: 0.75rem;
 }
 
 .hidden {
@@ -21,7 +23,7 @@ $dark-grey: #666;
 }
 
 .margin-bottom-1 {
-    margin-bottom: .75rem;
+    margin-bottom: 0.75rem;
 }
 
 .no-wrap {
@@ -51,17 +53,17 @@ $dark-grey: #666;
     width: 100%;
 }
 
-.option { 
-    padding: .5rem;
+.option {
+    padding: 0.5rem;
 }
 
 .option:nth-child(even) {
-    background: rgb( 250, 250, 250 )
+    background: rgb(250, 250, 250);
 }
 
 #criteria {
     overflow-y: auto;
-    max-height: calc( 100vh - 300px);
+    max-height: calc(100vh - 300px);
 }
 
 body {

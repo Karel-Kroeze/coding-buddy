@@ -1,8 +1,7 @@
 import mongoose, { HydratedDocument } from "mongoose";
 import { Schema, Model } from "mongoose";
 import { randomBytes } from "crypto";
-const SALT_LENGTH = 64;
-
+import { generate } from "generate-password";
 import { pbkdf2 } from "mz/crypto";
 import { Role } from "./role.model";
 import { IDataSet, DataSet } from "./dataset.model";
@@ -10,6 +9,9 @@ import { Code } from "./code.model";
 import { Criterium } from "./criterium.model";
 import { ERole } from "./role.enum";
 import { Mark } from "./mark.model";
+
+const SALT_LENGTH = 64;
+const PASSWORD_LENGTH = 12;
 
 export interface IPerson {
     name: string;
@@ -30,9 +32,10 @@ export interface IPersonMethods {
     roleString(dataset: mongoose.Types.ObjectId | IDataSet): Promise<string>;
     createLoginToken(): void;
 }
- 
+
 export interface IPersonModel extends Model<IPerson> {
     hash(password: string, salt: string): Promise<string>;
+    generatePassword(): string;
 }
 
 export type PersonDocument = HydratedDocument<IPerson, IPersonMethods>;
@@ -53,6 +56,16 @@ PersonSchema.static(
         );
     }
 );
+
+PersonSchema.static("generatePassword", function (): string {
+    return generate({
+        length: PASSWORD_LENGTH,
+        excludeSimilarCharacters: true,
+        numbers: true,
+        symbols: true,
+        strict: true,
+    });
+});
 
 PersonSchema.method({
     verifyPassword: async function (

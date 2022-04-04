@@ -5,6 +5,7 @@ import { DataSet } from "../models/dataset.model";
 import { Role } from "../models/role.model";
 import { ERole } from "../models/role.enum";
 import { Types } from "mongoose";
+import { transporter } from "../mail";
 
 export const PersonRouter = Router();
 let router = PersonRouter;
@@ -58,15 +59,19 @@ router.post("/", User.can("create person"), async (req, res) => {
             }
         }
 
-        // set initial login method (password if given, otherwise some to-be-implemented tokenish thing)
-        if (req.body.password) {
-            await person.setPassword(req.body.password);
-        } else {
-            await person.createLoginToken();
-        }
-
+        const password = Person.generatePassword();
+        await person.setPassword(password);
         await person.save();
-        req.message("success", `Succesfully added ${person.name}`);
+
+        transporter.sendMail({
+            to: person.email,
+            subject: "New account",
+            text: `An account was created for you on Coding Buddy (https://coding.home.karel-kroeze.nl)\n\nUsername: ${person.email}\nPassword: ${password}`,
+        });
+        req.message(
+            "success",
+            `Succesfully created an account for "${person.name}" (${person.email})`
+        );
         res.redirect(req.baseUrl);
     } catch (err) {
         req.message(`Failed adding person: ${err}`);
@@ -118,7 +123,14 @@ router.patch("/:personId", User.can("edit person"), async (req, res) => {
 
         person.name = req.body.name;
         person.email = req.body.email;
-        if (user.admin) person.admin = req.body.admin;
+
+        if (user.admin && user.id !== person.id) {
+            person.admin = req.body.admin;
+        }
+        if (user.id === person.id) {
+            // can't change your own admin status
+            person.admin = user.admin;
+        }
 
         for (const dataset in req.body.datasets) {
             let role = req.body.datasets[dataset];
@@ -135,6 +147,37 @@ router.patch("/:personId", User.can("edit person"), async (req, res) => {
     }
     res.redirect(req.baseUrl);
 });
+
+router.get(
+    "/:personId/resetPassword",
+    User.can("edit person"),
+    async (req, res) => {
+        try {
+            const user = req.user!;
+            const person = (await Person.findById(
+                req.params.personId
+            )) as PersonDocument;
+            if (!person) throw "Person not found";
+
+            const password = Person.generatePassword();
+            console.log({ password });
+            await person.setPassword(password);
+            transporter.sendMail({
+                to: person.email,
+                subject: "password reset",
+                text: `Hi ${person.name},\n\nYour password was reset.\nYour new password is: ${password}\n\nStay safe!`,
+            });
+            await person.save();
+            req.message(
+                "info",
+                `Password reset for ${person.name} (${person.email})`
+            );
+        } catch (err) {
+            req.message(`Could not update person: ${err}`);
+        }
+        res.redirect(req.baseUrl);
+    }
+);
 
 // delete
 router.delete("/:personId", User.can("delete person"), async (req, res) => {
