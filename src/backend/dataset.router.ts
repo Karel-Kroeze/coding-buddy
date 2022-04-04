@@ -20,7 +20,9 @@ router.get("/", User.can("list datasets"), async (req, res) => {
     const docs = (await DataSet.find({})
         .populate("criteria")
         .exec()) as DataSetDocument[];
-    let datasets = docs.filter(async (doc) => await user.role(doc) >= ERole.view);
+    let datasets = docs.filter(
+        async (doc) => (await user.role(doc)) >= ERole.view
+    );
     res.render("datasets/index", {
         title: "DataSets",
         datasets,
@@ -301,15 +303,15 @@ router.get(
             var json = JSON.stringify(artifacts, null, 4);
             var filename = "data.json";
             var mimetype = "application/json";
+
             res.setHeader("Content-Type", mimetype);
             res.setHeader(
                 "Content-disposition",
                 "attachment; filename=" + filename
             );
             res.send(json);
-            res.redirect(req.baseUrl);
         } catch (err) {
-            req.message(`Error downloading data: ${err}`);
+            req.message(`Error downloading  data: ${err}`);
             res.redirect(req.baseUrl);
         }
     }
@@ -321,7 +323,6 @@ router.get("/:datasetId", User.can("view dataset"), async (req, res) => {
         let dataset = (await DataSet.findById(req.params.datasetId)
             .populate({
                 path: "criteria",
-
             })
             .exec()) as DataSetDocument;
         if (!dataset) throw "dataset not found";
@@ -329,7 +330,6 @@ router.get("/:datasetId", User.can("view dataset"), async (req, res) => {
         await dataset.getCodes();
         await dataset.getProgress();
 
-        console.log({ dataset, codes: dataset.codes });
         res.render("datasets/detail", { dataset, baseUrl: req.baseUrl });
     } catch (err) {
         req.message(`Error viewing dataset: ${err}`);

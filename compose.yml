@@ -1,6 +1,7 @@
 services:
     mongo:
         image: mongo:4
+        restart: always
         volumes:
             - db:/data/db
         networks:
@@ -8,6 +9,7 @@ services:
 
     app:
         build: .
+        restart: always
         links:
             - mongo
         env_file: production.env

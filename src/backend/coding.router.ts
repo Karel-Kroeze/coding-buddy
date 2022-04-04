@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { Types } from "mongoose";
+import mongoose from "mongoose";
 
 import { User } from "../authorization";
 import { randomElement } from "../helpers";
@@ -21,7 +21,7 @@ router.get("/", User.can("list datasets"), async (req, res) => {
         await Promise.all(datasets.map((ds) => ds.getMarks()));
         res.render("coding/index", {
             datasets: datasets.filter(
-                async (ds) => ds.coding && await user.role(ds) >= ERole.view
+                async (ds) => ds.coding && (await user.role(ds)) >= ERole.view
             ),
             baseUrl: req.baseUrl,
         });
@@ -42,7 +42,11 @@ router.get(
             ).populate("criteria")) as DataSetDocument | null;
             if (!dataset) throw "DataSet not found";
             let artifacts: IArtifact[] = await Artifact.aggregate([
-                { $match: { dataset: new Types.ObjectId(dataset.id) } },
+                {
+                    $match: {
+                        dataset: new mongoose.Types.ObjectId(dataset.id),
+                    },
+                },
                 {
                     $project: {
                         content: true,

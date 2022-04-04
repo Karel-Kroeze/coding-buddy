@@ -1,4 +1,4 @@
-import mongoose, { HydratedDocument, Schema } from "mongoose";
+import mongoose, { HydratedDocument, Schema, Types, Mongoose } from "mongoose";
 
 import { Artifact, IArtifact } from "./artifact.model";
 import { Code, ICode } from "./code.model";
@@ -7,8 +7,6 @@ import { IMark, Mark } from "./mark.model";
 import { IPerson, PersonDocument } from "./person.model";
 import { ERole } from "./role.enum";
 import { IRole, Role } from "./role.model";
-
-const ObjectId = mongoose.Schema.Types.ObjectId;
 
 export interface IDataSet {
     artifacts: IArtifact[];
@@ -42,14 +40,14 @@ export interface IProgress {
 }
 
 const DataSetSchema = new Schema<IDataSet, IDataSetMethods>({
-    artifacts: [{ type: ObjectId, ref: "Artifact" }],
-    owner: { type: ObjectId, ref: "Person", required: true },
+    artifacts: [{ type: Schema.Types.ObjectId, ref: "Artifact" }],
+    owner: { type: Schema.Types.ObjectId, ref: "Person", required: true },
     name: { type: String, required: true },
     desc: String,
     type: { type: String, required: true },
     template: { type: String, required: false },
-    criteria: [{ type: ObjectId, ref: "Criterium" }],
-    roles: [{type: ObjectId, ref: "Role"}],
+    criteria: [{ type: Schema.Types.ObjectId, ref: "Criterium" }],
+    roles: [{ type: Schema.Types.ObjectId, ref: "Role" }],
     coding: { type: Boolean, default: false },
     completed: { type: Boolean, default: false },
 });
@@ -60,7 +58,7 @@ export type DataSetDocument = HydratedDocument<IDataSet, IDataSetMethods>;
 DataSetSchema.method({
     getProgress: async function (this: DataSetDocument): Promise<IProgress> {
         let progress = await Artifact.aggregate([
-            { $match: { dataset: new ObjectId(this.id) } },
+            { $match: { dataset: new mongoose.Types.ObjectId(this.id) } },
             { $group: { _id: { $size: "$codes" }, count: { $sum: 1 } } },
             { $project: { numCodes: "$_id", _id: false, count: "$count" } },
         ]);
@@ -69,6 +67,7 @@ DataSetSchema.method({
         let total = sum(progress);
         let completed = sum(progress.filter((p) => p.numCodes > 0));
         let overlap = sum(progress.filter((p) => p.numCodes > 1));
+
         (<any>this)._progress = { total, completed, overlap };
         return (<any>this)._progress;
     },

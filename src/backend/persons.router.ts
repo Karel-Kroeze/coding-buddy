@@ -4,7 +4,7 @@ import { Person, PersonDocument } from "../models/person.model";
 import { DataSet } from "../models/dataset.model";
 import { Role } from "../models/role.model";
 import { ERole } from "../models/role.enum";
-import { Types } from "mongoose";
+import mongoose from "mongoose";
 import { transporter } from "../mail";
 
 export const PersonRouter = Router();
@@ -46,7 +46,12 @@ router.post("/", User.can("create person"), async (req, res) => {
         }) as PersonDocument;
         for (let datasetId in req.body.datasets) {
             // check if user has auth for this dataset
-            if (await user.can(ERole.admin, new Types.ObjectId(datasetId))) {
+            if (
+                await user.can(
+                    ERole.admin,
+                    new mongoose.Types.ObjectId(datasetId)
+                )
+            ) {
                 console.log({
                     raw: req.body.datasets[datasetId],
                     role: ERole[req.body.datasets[datasetId]],
