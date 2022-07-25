@@ -21,7 +21,15 @@
     },
     "feedback": "./dist/assets/js/renderers/feedback.js",
     "text": "./dist/assets/js/renderers/text.js",
+    "conceptmap": "./dist/assets/js/renderers/conceptmap.js",
     "targets": {
+        "conceptmap": {
+	    "source": "./renderers/conceptmap.ts",
+	    "context": "browser",
+	    "outputFormat": "global",
+	    "publicUrl": ".",
+	    "sourceMap": false
+        },
         "text": {
             "source": "./renderers/text.ts",
             "context": "browser",
